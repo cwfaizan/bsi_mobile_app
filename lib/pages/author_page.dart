@@ -1,4 +1,8 @@
+import 'package:bsi_mobile_app/common/util.dart';
 import 'package:flutter/material.dart';
+import 'package:dio/dio.dart';
+
+import 'author_add_page.dart';
 
 class AuthorPage extends StatefulWidget {
   const AuthorPage({super.key});
@@ -9,6 +13,7 @@ class AuthorPage extends StatefulWidget {
 
 class _AuthorPageState extends State<AuthorPage> {
   List<Map<String, dynamic>> authorList = [];
+  final dio = Dio();
 
   @override
   void initState() {
@@ -16,30 +21,15 @@ class _AuthorPageState extends State<AuthorPage> {
     super.initState();
   }
 
-  void initData() {
-    authorList = [
-      {
-        'id': 1,
-        'name': 'John Doe',
-        'created_at': '2022-01-01 00:00:00',
-      },
-      {
-        'id': 2,
-        'name': 'Jane Doe',
-        'created_at': '2022-01-02 00:00:00',
-      },
-      {
-        'id': 3,
-        'name': 'John Smith',
-        'created_at': '2022-01-03 00:00:00',
-      },
-      {
-        'id': 4,
-        'name': 'John Smith',
-        'created_at': '2022-01-03 00:00:00',
-      },
-    ];
-    setState(() {});
+  Future<void> initData() async {
+    final response = await dio.get('${Util.baseUrl}api/authors');
+    if (response.statusCode == 200) {
+      Map<String, dynamic> map = response.data;
+      for (final m in map['data']) {
+        authorList.add(m);
+      }
+      setState(() {});
+    }
   }
 
   @override
@@ -47,11 +37,17 @@ class _AuthorPageState extends State<AuthorPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Author Page'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const AuthorAddPage()));
+            },
+          ),
+        ],
       ),
       body: ListView.builder(
-        // gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        //   crossAxisCount: 2,
-        // ),
         itemCount: authorList.length,
         itemBuilder: (context, index) {
           return ListTile(
