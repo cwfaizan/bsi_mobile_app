@@ -1,4 +1,5 @@
 import 'package:bsi_mobile_app/pages/author_page.dart';
+import 'package:bsi_mobile_app/pages/book_add_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      home: const AuthorPage(),
+      home: const BookAddPage(),
     );
   }
 }
